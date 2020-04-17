@@ -35,8 +35,6 @@ public class Req3 {
 				String name = rs.getString(1);
 				int orderNumber = rs.getInt(2);
 
-				System.out.println(rs.getString(i));
-
 				if (!(customerOrders.containsKey(name))) {
 					customerOrders.put(name, new ArrayList<Integer>());
 					customerOrders.get(name).add(orderNumber);
