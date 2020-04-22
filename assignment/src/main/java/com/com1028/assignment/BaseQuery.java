@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BaseQuery {
 
-	protected Connection con;
+	private Connection con;
 	private final String db = "jdbc:mysql://localhost:3306/classicmodels";
 
 	public BaseQuery(String uname, String pwd) {
