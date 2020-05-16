@@ -9,8 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 public class SetH_req3 {
+
+	private List<Payments> payments = new ArrayList<Payments>();
+
+	private Map<String, List<Integer>> customerOrders = new HashMap<String, List<Integer>>();
 	
-	public Map<String, List<Integer>> Req3() throws SQLException { 
+	private Map<Integer, ArrayList<Integer>> customerAndOrder = new HashMap<Integer, ArrayList<Integer>>();
+
+
+	public ArrayList<ArrayList<Object>> getCustomerDataFromDatabase() throws SQLException {
 
 		BaseQuery bq = new BaseQuery("root", "georgespc");
 
@@ -18,7 +25,13 @@ public class SetH_req3 {
 		columns.add("customerNumber");
 		columns.add("customerName");
 
-		ArrayList<ArrayList<Object>> tableOfCustomers = bq.select(columns, "customers");
+		ArrayList<ArrayList<Object>> data = bq.select(columns, "customers");
+
+		return data;
+
+	}
+
+	public ArrayList<ArrayList<Object>> getOrderDataFromDatabase() throws SQLException {
 
 		BaseQuery bq2 = new BaseQuery("root", "georgespc");
 
@@ -26,7 +39,13 @@ public class SetH_req3 {
 		columns2.add("orderNumber");
 		columns2.add("customerNumber");
 
-		ArrayList<ArrayList<Object>> tableOfOrders = bq2.select(columns2, "orders");
+		ArrayList<ArrayList<Object>> data = bq2.select(columns2, "orders");
+
+		return data;
+
+	}
+
+	public ArrayList<ArrayList<Object>> getPaymentDataFromDatabase() throws SQLException {
 
 		BaseQuery bq4 = new BaseQuery("root", "georgespc");
 
@@ -36,81 +55,49 @@ public class SetH_req3 {
 		columns4.add("paymentDate");
 		columns4.add("amount");
 
-		ArrayList<ArrayList<Object>> tableOfPayments = bq4.select(columns4, "payments");
+		ArrayList<ArrayList<Object>> data = bq4.select(columns4, "payments");
 
-		List<Payments> payments = new ArrayList<Payments>();
-		List<Customers> customers = new ArrayList<Customers>();
-		List<Orders> orders = new ArrayList<Orders>();
+		return data;
+
+	}
+
+
+	public void updateDataLists(ArrayList<ArrayList<Object>> tableOfCustomers,  ArrayList<ArrayList<Object>> tableOfOrders,  ArrayList<ArrayList<Object>> tableOfPayments) {
+
+		for (int i = 0; i < tableOfPayments.size(); i++) {
+			Payments p = new Payments((Integer) tableOfPayments.get(i).get(0), tableOfPayments.get(i).get(1).toString(),
+					new Date(2), (BigDecimal) tableOfPayments.get(i).get(3));
+			if (p.getAmount().doubleValue() > 25000) {
+				customerAndOrder.put(p.getCustomerNumber(), new ArrayList<Integer>());
+				payments.add(p);
+
+			}
+		}
+		
+		for (int i = 0; i < tableOfOrders.size(); i++) {
+			Orders o = new Orders((Integer) tableOfOrders.get(i).get(0), (Integer) tableOfOrders.get(i).get(1));
+			if (customerAndOrder.containsKey(o.getCustomerNumber())) {
+				customerAndOrder.get(o.getCustomerNumber()).add(o.getOrderID());
+			}
+		}
 
 		for (int i = 0; i < tableOfCustomers.size(); i++) {
-
 			Customers c = new Customers((Integer) tableOfCustomers.get(i).get(0),
 					tableOfCustomers.get(i).get(1).toString());
 
-			if (!customers.contains(c)) {
-				customers.add(c);
-			}
-		}
-
-		for (int i = 0; i < tableOfPayments.size(); i++) {
-
-			Payments p = new Payments((Integer) tableOfPayments.get(i).get(0), tableOfPayments.get(i).get(1).toString(),
-					new Date(0), (BigDecimal) tableOfPayments.get(i).get(3));
-
-			if (!payments.contains(p)) {
-				payments.add(p);
-			}
-		}
-
-		for (int i = 0; i < tableOfOrders.size(); i++) {
-			Orders o = new Orders((Integer) tableOfOrders.get(i).get(0), (Integer) tableOfOrders.get(i).get(1));
-			if (!orders.contains(o)) {
-				orders.add(o);
-			}
-		}
-
-		// Map that returns an ordersdetails with the customer number
-
-		Map<Customers, Payments> customerPayments = new HashMap<Customers, Payments>();
-
-		Map<String, List<Integer>> customerOrders = new HashMap<String, List<Integer>>();
-
-		for (int i = 0; i < customers.size(); i++) {
 			for (Payments p : payments) {
-				if (customers.get(i).getCID() == p.getCustomerNumber()) {
-					if (p.getAmount().compareTo(new BigDecimal(25000)) == 1) {
-						customerPayments.put(customers.get(i), p);
-
-
-					}
+				if (p.getCustomerNumber() == c.getCID() && !customerOrders.containsKey(c.getName())) {
+					customerOrders.put(c.getName(), customerAndOrder.get(p.getCustomerNumber()));
 				}
-
 			}
 		}
 
-		for (int i = 0; i < tableOfOrders.size(); i++) {
-
-			for (Map.Entry<Customers, Payments> entry : customerPayments.entrySet()) {
-				Customers key = entry.getKey();
-
-				if (orders.get(i).getCustomerNumber() == key.getCID()) {
-					if (!customerOrders.containsKey(key.getName())) {
-						List<Integer> orderNumbers = new ArrayList<Integer>();
-						orderNumbers.add(orders.get(i).getOrderID());
-						customerOrders.put(key.getName(), orderNumbers);
-
-
-					} else {
-						customerOrders.get(key.getName()).add(orders.get(i).getOrderID());
-					}
-				}
-
-			}
-
-		}
-
-		return customerOrders;
 
 	}
+	
+	public Map<String, List<Integer>> customerOrders() {
+		return customerOrders;
+	}
+
 
 }
