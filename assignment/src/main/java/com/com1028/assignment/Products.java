@@ -30,6 +30,7 @@ public class Products {
 	}
 
 
+
 	@Override
 	public String toString() {
 		return "\n\nID=" + ID + ", name=" + name + ", productType=" + productType + ", productScale="
@@ -66,6 +67,12 @@ public class Products {
 	            this.stock, 
 	            this.price, 
 	            this.MRSP);
+	}
+
+
+
+	public String getProductType() {
+		return productType;
 	}
 
 

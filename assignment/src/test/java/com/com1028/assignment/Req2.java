@@ -2,6 +2,7 @@ package com.com1028.assignment;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -17,25 +18,33 @@ public class Req2 {
 	public void test() throws SQLException {
 
 		BaseQuery bq = new BaseQuery("root", "georgespc");
-		SetH_req2 requirements = new SetH_req2();
+		SetH_req2 req = new SetH_req2();
+		req.createAndloopPayments(req.getDataFromDatabase("payments"));
 
-		Map<Date, Integer> paymentsForEachDate = new HashMap<Date, Integer>();
+		Map<Date, Double> paymentsForEachDate = new HashMap<Date, Double>();
 
-		ResultSet rs = bq.query("select paymentDate from payments");
+		ResultSet rs = bq.query("select customerNumber, checkNumber, paymentDate, amount from payments");
 		ResultSetMetaData rsmd = rs.getMetaData();
 		while (rs.next()) {
+
+			Date d = null;
+			BigDecimal amount = null;
+
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 
-				if (!(paymentsForEachDate.containsKey(rs.getDate(1)))) {
-					paymentsForEachDate.put(rs.getDate(1), 1);
-				} else {
-					paymentsForEachDate.put(rs.getDate(1), paymentsForEachDate.get(rs.getDate(1)) + 1);
-				}
+				d = rs.getDate(3);
+				amount = rs.getBigDecimal(4);
 
+			}
+
+			if (!(paymentsForEachDate.containsKey(d))) {
+				paymentsForEachDate.put(d, amount.doubleValue());
+			} else if (paymentsForEachDate.containsKey(d)) {
+				paymentsForEachDate.put(d, paymentsForEachDate.get(d) + amount.doubleValue());
 			}
 		}
 
-		assertEquals(requirements.Req2(), paymentsForEachDate);
+		assertEquals(req.returnPaymentsForEachDate(), paymentsForEachDate);
 
 	}
 

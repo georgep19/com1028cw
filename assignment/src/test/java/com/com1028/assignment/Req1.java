@@ -20,6 +20,7 @@ public class Req1 {
 
 		BaseQuery bq = new BaseQuery("root", "georgespc");
 		SetH_req1 requirement = new SetH_req1();
+		requirement.loopProducts(requirement.getDataFromDatabase("products"));
 
 		Map<String, List<Products>> lineWithProducts = new HashMap<String, List<Products>>();
 
@@ -56,7 +57,7 @@ public class Req1 {
 			}
 		}
 
-		assertEquals(requirement.Req1(), lineWithProducts);
+		assertEquals(requirement.returnLineWithProducts(), lineWithProducts);
 
 	}
 

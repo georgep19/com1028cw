@@ -71,4 +71,8 @@ public class Payments {
 		return true;
 	}
 
+	public Date getPaymentDate() {
+		return paymentDate;
+	}
+
 }
