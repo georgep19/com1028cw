@@ -36,24 +36,30 @@ public class Req1 {
 		ResultSetMetaData rsmd = rs.getMetaData();
 
 		while (rs.next()) {
+			
+			Products p = null;
+			String line = null;
+			
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 				String code = rs.getString(1);
 				String name = rs.getString(2);
-				String line = rs.getString(3);
+				line = rs.getString(3);
 				String scale = rs.getString(4);
 				String vendor = rs.getString(5);
 				String desc = rs.getString(6);
 				int quantity = rs.getInt(7);
 				BigDecimal price = rs.getBigDecimal(8);
 				BigDecimal msrp = rs.getBigDecimal(9);
-				Products p = new Products(code, name, line, scale, vendor, desc, quantity, price, msrp);
-				if (!(lineWithProducts.containsKey(line))) {
-					lineWithProducts.put(line, new ArrayList<Products>());
-					lineWithProducts.get(line).add(p);
-				} else if (!(lineWithProducts.get(line).contains(p))) {
-					lineWithProducts.get(line).add(p);
-				}
+				p = new Products(code, name, line, scale, vendor, desc, quantity, price, msrp);
+				
 
+			}
+			
+			if (!(lineWithProducts.containsKey(line))) {
+				lineWithProducts.put(line, new ArrayList<Products>());
+				lineWithProducts.get(line).add(p);
+			} else if (!(lineWithProducts.get(line).contains(p))) {
+				lineWithProducts.get(line).add(p);
 			}
 		}
 

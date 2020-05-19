@@ -14,7 +14,7 @@ public class SetH_req3 {
 
 	private Map<String, List<Integer>> customerOrders = new HashMap<String, List<Integer>>();
 	
-	private Map<Integer, ArrayList<Integer>> customerAndOrder = new HashMap<Integer, ArrayList<Integer>>();
+	private Map<Integer, List<Integer>> customerAndOrder = new HashMap<Integer, List<Integer>>();
 
 
 	public ArrayList<ArrayList<Object>> getCustomerDataFromDatabase() throws SQLException {
