@@ -58,7 +58,7 @@ public class Req1 {
 			if (!(lineWithProducts.containsKey(line))) {
 				lineWithProducts.put(line, new ArrayList<Products>());
 				lineWithProducts.get(line).add(p);
-			} else if (!(lineWithProducts.get(line).contains(p))) {
+			} else {
 				lineWithProducts.get(line).add(p);
 			}
 		}

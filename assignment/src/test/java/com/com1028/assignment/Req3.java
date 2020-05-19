@@ -21,8 +21,9 @@ public class Req3 {
 
 		BaseQuery bq = new BaseQuery("root", "georgespc");
 		SetH_req3 req = new SetH_req3();
-		
-		req.updateDataLists(req.getCustomerDataFromDatabase(),req.getOrderDataFromDatabase(),req.getPaymentDataFromDatabase());
+
+		req.updateDataLists(req.getCustomerDataFromDatabase(), req.getOrderDataFromDatabase(),
+				req.getPaymentDataFromDatabase());
 
 		ResultSet rs = bq.query(
 
@@ -44,13 +45,11 @@ public class Req3 {
 
 			}
 
-			if (customerOrders.containsKey(name)) {
-				if (!(customerOrders.get(name).contains(orderNumber))) {
+			if (customerOrders.containsKey(name) && !(customerOrders.get(name).contains(orderNumber))) {
 
-					customerOrders.get(name).add(orderNumber);
-				}
+				customerOrders.get(name).add(orderNumber);
 
-			} else if (!customerOrders.containsKey(name)) {
+			} else {
 				customerOrders.put(name, new ArrayList<Integer>());
 				customerOrders.get(name).add(orderNumber);
 			}

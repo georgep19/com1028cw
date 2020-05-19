@@ -39,7 +39,7 @@ public class Req2 {
 
 			if (!(paymentsForEachDate.containsKey(d))) {
 				paymentsForEachDate.put(d, amount.doubleValue());
-			} else if (paymentsForEachDate.containsKey(d)) {
+			} else {
 				paymentsForEachDate.put(d, paymentsForEachDate.get(d) + amount.doubleValue());
 			}
 		}
